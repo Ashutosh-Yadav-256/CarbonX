@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Environment variables
+.env
+
+# Egg info
+*.egg-info/
+*.egg
+
+# Distribution / packaging
+dist/
+build/
+
+# pytest cache
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Experiments results (can be regenerated)
+experiments/results/
+experiments/figures/
