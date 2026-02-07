@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -10,7 +11,9 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser(description="Run CarbonX experiments")
-    parser.add_argument("--quick", action="store_true", help="Quick run with fewer samples")
+    parser.add_argument("--dataset", type=str, help="Run specific dataset (mmlu, humaneval, gsm8k, truthfulqa)")
+    parser.add_argument("--limit", type=int, help="Limit number of samples per dataset")
+    parser.add_argument("--quick", action="store_true", help="Quick run with fewer samples (deprecated, use --limit)")
     parser.add_argument("--benchmark-only", action="store_true", help="Only run benchmarks")
     parser.add_argument("--comparison-only", action="store_true", help="Only run comparisons")
     parser.add_argument("--figures-only", action="store_true", help="Only generate figures")
@@ -22,8 +25,11 @@ def main():
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print()
     
-    results_dir = Path("experiments/results")
+    # Use CARBONX_OUTPUT_DIR env var if set (for Kaggle), otherwise default
+    output_base = os.environ.get("CARBONX_OUTPUT_DIR", "experiments/results")
+    results_dir = Path(output_base)
     results_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Output directory: {results_dir}")
     
     all_results = {}
     
@@ -34,7 +40,13 @@ def main():
         from experiments.benchmark import BenchmarkRunner
         
         runner = BenchmarkRunner(output_dir=str(results_dir))
-        summaries = runner.run_all_benchmarks()
+        
+        # Determine strict limit or quick limit
+        limit = args.limit
+        if args.quick and not limit:
+            limit = 5
+            
+        summaries = runner.run_all_benchmarks(dataset_name=args.dataset, limit=limit)
         runner.print_summary(summaries)
         
         benchmark_path = runner.save_results(summaries, "benchmark_results.json")

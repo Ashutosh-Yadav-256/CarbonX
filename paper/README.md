@@ -1,70 +1,141 @@
-# CarbonX Research Paper
+# CarbonX Paper - Publication Materials
 
-## Files
+## 📄 Files Created
 
-- `carbonx_paper.tex` - Main LaTeX paper (IEEE format)
+### LaTeX Paper
+- **File**: `carbonx_results.tex`
+- **Type**: IEEE Conference format
+- **Content**: Complete paper with methodology, results, and discussion
 
-## Compiling the Paper
+### Figures Script
+- **File**: `generate_figures.py`
+- **Generates**: 5 publication-quality figures (PNG + PDF)
 
-### Option 1: Overleaf (Recommended)
-1. Go to [overleaf.com](https://www.overleaf.com)
-2. Create new project → Upload Project
-3. Upload `carbonx_paper.tex`
+---
+
+## 🖼️ Figures Generated
+
+1. **fig1_carbon_reduction.{png,pdf}** - Bar chart comparing baseline vs CarbonX emissions
+2. **fig2_model_distribution.{png,pdf}** - Stacked bar showing model selection distribution
+3. **fig3_accuracy_carbon.{png,pdf}** - Scatter plot of accuracy vs carbon trade-off
+4. **fig4_aggregate_distribution.{png,pdf}** - Pie chart of aggregate model usage
+5. **fig5_scale.{png,pdf}** - Carbon emissions at scale (100 to 1M queries)
+
+---
+
+## 🚀 How to Generate Figures
+
+### Prerequisites:
+```powershell
+# Install matplotlib and seaborn (if not already installed)
+.\.venv\Scripts\python.exe -m pip install matplotlib seaborn
+```
+
+### Generate:
+```powershell
+# Run the figure generation script
+.\.venv\Scripts\python.exe paper\generate_figures.py
+```
+
+This creates all figures in `paper/figures/` directory.
+
+---
+
+## 📝 How to Compile LaTeX Paper
+
+### Option 1: Overleaf (Recommended - No local setup needed)
+1. Go to [https://www.overleaf.com](https://www.overleaf.com)
+2. Create new project → "Upload Project"
+3. Upload `carbonx_results.tex` and all figures from `paper/figures/`
 4. Click "Recompile" to generate PDF
 
 ### Option 2: Local LaTeX
-```bash
-# Install TeX Live or MiKTeX first
-pdflatex carbonx_paper.tex
-pdflatex carbonx_paper.tex  # Run twice for references
+Requires LaTeX distribution (MiKTeX/TeX Live)
+
+```powershell
+# Navigate to paper directory
+cd paper
+
+# Compile (run twice for references)
+pdflatex carbonx_results.tex
+pdflatex carbonx_results.tex
+
+# View PDF
+carbonx_results.pdf
 ```
 
-### Option 3: VS Code
-1. Install LaTeX Workshop extension
-2. Open `carbonx_paper.tex`
-3. Press Ctrl+Alt+B to build
+---
 
-## Paper Structure
+## 📊 Key Results in Paper
 
-| Section | Description |
-|---------|-------------|
-| Abstract | 150 words summarizing key results |
-| Introduction | Problem, motivation, contributions |
-| Related Work | Green AI, efficient inference, carbon-aware computing |
-| Methodology | Problem formulation, algorithms, architecture |
-| Experiments | Setup, datasets, baselines, results |
-| Discussion | Trade-offs, limitations, future work |
-| Conclusion | Summary of contributions |
+- **Primary Finding**: 66.7% carbon reduction across all benchmarks
+- **Benchmarks**: 3,278 total questions (MMLU + GSM8K)
+- **Model Distribution**: 87% small, 12% medium, 1% large
+- **Language Accuracy**: 85.8-85.9% (excellent)
+- **Carbon Savings**: 1.4 kg CO₂ per million queries
 
-## Key Results (Pre-filled)
+---
 
-- **55% carbon reduction** vs always-large baseline
-- **73.2% accuracy** on ML benchmarks
-- Model distribution: Small 39%, Medium 39%, Large 22%
+## ✏️ Customization
 
-## Customization
-
-1. **Author info**: Update `\author{}` section
-2. **Add figures**: Copy from `experiments/figures/` and use `\includegraphics`
-3. **Expand datasets**: Add more samples to improve experimental rigor
-4. **Conference format**: Switch to ACM by uncommenting line 9
-
-## Adding Figures
-
+### Update Author Info:
+Edit lines 12-15 in `carbonx_results.tex`:
 ```latex
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\columnwidth]{carbon_comparison.png}
-    \caption{Carbon emissions by inference strategy}
-    \label{fig:carbon}
+\author{\IEEEauthorblockN{Your Name}
+\IEEEauthorblockA{\textit{Your Institution}\\
+Your City, Country \\
+email@example.com}}
+```
+
+### Add More Figures:
+Add `\includegraphics` commands in the appropriate sections:
+```latex
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/figX_name.pdf}
+\caption{Your caption here}
+\label{fig:yourfig}
 \end{figure}
 ```
 
-## Target Venues
+---
 
-| Venue | Deadline | Format |
-|-------|----------|--------|
-| NeurIPS Workshop | May | neurips.cc |
-| ICML | January | icml.cc |
-| ACL (Green NLP) | February | aclweb.org |
-| AAAI | August | aaai.org |
+## 📁 Directory Structure
+
+```
+paper/
+├── carbonx_results.tex          # LaTeX paper
+├── generate_figures.py          # Figure generation script
+├── README.md                    # This file
+└── figures/                     # Generated figures
+    ├── fig1_carbon_reduction.{png,pdf}
+    ├── fig2_model_distribution.{png,pdf}
+    ├── fig3_accuracy_carbon.{png,pdf}
+    ├── fig4_aggregate_distribution.{png,pdf}
+    └── fig5_scale.{png,pdf}
+```
+
+---
+
+## 🎯 Next Steps
+
+1. **Generate figures**: Run `generate_figures.py`
+2. **Review paper**: Read `carbonx_results.tex`
+3. **Customize**: Add your name and affiliation
+4. **Compile**: Use Overleaf or local LaTeX
+5. **Submit**: To your target conference/journal!
+
+---
+
+## 📚 Citation
+
+If you use this work, please cite:
+
+```bibtex
+@inproceedings{carbonx2024,
+  title={CarbonX: A Carbon-Aware Inference Framework for Sustainable Large Language Models},
+  author={Your Name},
+  booktitle={Conference Name},
+  year={2024}
+}
+```

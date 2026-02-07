@@ -1,597 +1,511 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarbonX Dashboard</title>
-    <style>
-        :root {
-            --bg-primary: #0f1419;
-            --bg-secondary: #1a1f2e;
-            --bg-card: #242938;
-            --accent-green: #22c55e;
-            --accent-blue: #3b82f6;
-            --accent-yellow: #eab308;
-            --accent-red: #ef4444;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: #374151;
-        }
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>CarbonX Deep Space Dashboard</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
 
+    <!-- Tailwind setup with local fallback -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (typeof tailwind === 'undefined') {
+            document.write('<script src="/tailwindcss.js"><\/script>');
+        }
+    </script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2bee6c",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#020617",
+                        "glass": "rgba(30, 41, 59, 0.5)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(43, 238, 108, 0.3);
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .neon-text-glow {
+            text-shadow: 0 0 8px rgba(43, 238, 108, 0.5);
         }
-
-        .logo-icon {
-            font-size: 32px;
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-
-        .logo h1 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        ::-webkit-scrollbar-track {
+            background: rgba(2, 6, 23, 1);
         }
-
-        .logo p {
-            color: var(--text-secondary);
-            font-size: 14px;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(43, 238, 108, 0.2);
+            border-radius: 10px;
         }
-
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid var(--accent-green);
-            border-radius: 20px;
-            font-size: 14px;
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(43, 238, 108, 0.4);
         }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid var(--border);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .card-value {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .card-value.green {
-            color: var(--accent-green);
-        }
-
-        .card-value.blue {
-            color: var(--accent-blue);
-        }
-
-        .card-value.yellow {
-            color: var(--accent-yellow);
-        }
-
-        .card-value.red {
-            color: var(--accent-red);
-        }
-
-        .card-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: var(--bg-primary);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-fill.green {
-            background: var(--accent-green);
-        }
-
-        .progress-fill.yellow {
-            background: var(--accent-yellow);
-        }
-
-        .progress-fill.red {
-            background: var(--accent-red);
-        }
-
-        .chart-card {
-            grid-column: span 2;
-        }
-
-        .model-bars {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .model-bar {
-            flex: 1;
-            text-align: center;
-        }
-
-        .bar-container {
-            height: 120px;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            display: flex;
-            align-items: flex-end;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .bar {
-            width: 100%;
-            border-radius: 8px 8px 0 0;
-            transition: height 0.5s ease;
-        }
-
-        .bar.small {
-            background: var(--accent-green);
-        }
-
-        .bar.medium {
-            background: var(--accent-blue);
-        }
-
-        .bar.large {
-            background: var(--accent-yellow);
-        }
-
-        .model-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .model-value {
-            font-size: 18px;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .inference-section {
-            margin-top: 30px;
-        }
-
-        .inference-form {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .inference-input {
-            flex: 1;
-            padding: 14px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-
-        .inference-input:focus {
-            outline: none;
-            border-color: var(--accent-green);
-        }
-
-        .inference-btn {
-            padding: 14px 28px;
-            background: linear-gradient(135deg, var(--accent-green), #16a34a);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .inference-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-        }
-
-        .inference-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .response-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid var(--border);
-            display: none;
-        }
-
-        .response-card.active {
-            display: block;
-        }
-
-        .response-text {
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .response-meta {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .meta-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .meta-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .meta-value {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-
-        .loading.active {
-            display: block;
-        }
-
+        /* Spinner */
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent-green);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #2bee6c;
             border-radius: 50%;
-            margin: 0 auto 16px;
             animation: spin 1s linear infinite;
         }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .chart-card {
-                grid-column: span 1;
-            }
-
-            .inference-form {
-                flex-direction: column;
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <span class="logo-icon"></span>
-                <div>
-                    <h1>CarbonX</h1>
-                    <p>Carbon-First LLM Inference</p>
+<body class="bg-background-dark text-white min-h-screen font-display">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <!-- Top Navigation -->
+        <header
+            class="flex items-center justify-between border-b border-white/10 px-8 py-4 sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md">
+            <div class="flex items-center gap-3">
+                <div class="size-8 text-primary neon-text-glow">
+                    <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd"
+                            d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
+                            fill="currentColor" fill-rule="evenodd"></path>
+                    </svg>
                 </div>
+                <h2 class="text-white text-xl font-bold tracking-tight">CarbonX</h2>
             </div>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                <span id="connection-status">Connecting...</span>
+
+            <div class="flex items-center gap-4">
+                <div id="connection-status"
+                    class="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-3 py-1.5 neon-glow">
+                    <div class="size-2 rounded-full bg-primary animate-pulse"></div>
+                    <span id="status-text" class="text-primary text-xs font-bold uppercase tracking-wider">System
+                        Online</span>
+                </div>
+                <button
+                    class="flex items-center justify-center size-10 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+                    <span class="material-symbols-outlined text-white text-[20px]">notifications</span>
+                </button>
             </div>
         </header>
 
-        <div class="grid">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">Carbon Intensity</span>
-                    <span></span>
+        <main class="flex-1 max-w-[1440px] mx-auto w-full p-8 space-y-8">
+            <!-- Top Metrics Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card rounded-xl p-5 flex flex-col gap-1">
+                    <span class="text-gray-400 text-xs font-medium uppercase tracking-widest">Carbon Intensity</span>
+                    <div class="flex items-baseline gap-2">
+                        <span id="carbon-intensity" class="text-2xl font-bold text-white tracking-tight">--</span>
+                        <span class="text-sm text-gray-500">gCO2/kWh</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-[#fa5538] mt-2">
+                        <span class="material-symbols-outlined text-sm">public</span>
+                        <span id="region" class="text-xs font-bold">Checking...</span>
+                    </div>
                 </div>
-                <div class="card-value blue" id="carbon-intensity">--</div>
-                <div class="card-subtitle">gCO₂/kWh (Region: <span id="region">--</span>)</div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">Total Requests</span>
-                    <span></span>
+                <div class="glass-card rounded-xl p-5 flex flex-col gap-1">
+                    <span class="text-gray-400 text-xs font-medium uppercase tracking-widest">Total Requests</span>
+                    <div class="flex items-baseline gap-2">
+                        <span id="total-requests" class="text-2xl font-bold text-white tracking-tight">0</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-primary mt-2">
+                        <span class="material-symbols-outlined text-sm">north_east</span>
+                        <span class="text-xs font-bold">Active</span>
+                    </div>
                 </div>
-                <div class="card-value" id="total-requests">--</div>
-                <div class="card-subtitle">Since startup</div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">Carbon Emitted</span>
-                    <span></span>
+                <div class="glass-card rounded-xl p-5 flex flex-col gap-1">
+                    <span class="text-gray-400 text-xs font-medium uppercase tracking-widest">Carbon Emitted</span>
+                    <div class="flex items-baseline gap-2">
+                        <span id="total-carbon" class="text-2xl font-bold text-white tracking-tight">0.00</span>
+                        <span class="text-sm text-gray-500">grams</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-primary mt-2">
+                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                        <span class="text-xs font-bold">Within limit</span>
+                    </div>
                 </div>
-                <div class="card-value green" id="total-carbon">--</div>
-                <div class="card-subtitle">gCO₂ total</div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">Carbon Budget</span>
-                    <span></span>
-                </div>
-                <div class="card-value" id="budget-remaining">--</div>
-                <div class="card-subtitle">gCO₂ remaining</div>
-                <div class="progress-bar">
-                    <div class="progress-fill green" id="budget-progress" style="width: 100%"></div>
-                </div>
-            </div>
-
-            <div class="card chart-card">
-                <div class="card-header">
-                    <span class="card-title">Model Distribution</span>
-                    <span></span>
-                </div>
-                <div class="model-bars">
-                    <div class="model-bar">
-                        <div class="bar-container">
-                            <div class="bar small" id="bar-small" style="height: 33%"></div>
+                <div class="glass-card rounded-xl p-5 flex flex-col gap-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 text-xs font-medium uppercase tracking-widest">Carbon Budget</span>
+                        <span id="consumption-ratio" class="text-primary text-xs font-bold">0%</span>
+                    </div>
+                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                        <div id="budget-bar" class="bg-primary h-full neon-glow shadow-primary/50" style="width: 0%">
                         </div>
-                        <div class="model-label">Small</div>
-                        <div class="model-value" id="count-small">0</div>
                     </div>
-                    <div class="model-bar">
-                        <div class="bar-container">
-                            <div class="bar medium" id="bar-medium" style="height: 33%"></div>
+                    <span id="budget-remaining"
+                        class="text-[10px] text-gray-500 text-right uppercase tracking-tighter">-- gCO2 Remaining</span>
+                </div>
+            </div>
+
+            <!-- Main Split Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+                <!-- Left Column (70%) -->
+                <div class="lg:col-span-7 space-y-8">
+                    <!-- Forest View Card -->
+                    <div class="glass-card rounded-xl overflow-hidden relative min-h-[400px] flex flex-col">
+                        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">park</span>
+                                Forest View
+                            </h3>
+                            <span class="text-xs text-gray-400 font-medium">REAL-TIME CARBON SAVINGS
+                                VISUALIZATION</span>
                         </div>
-                        <div class="model-label">Medium</div>
-                        <div class="model-value" id="count-medium">0</div>
-                    </div>
-                    <div class="model-bar">
-                        <div class="bar-container">
-                            <div class="bar large" id="bar-large" style="height: 33%"></div>
+                        <div id="forest-container"
+                            class="flex-1 relative flex items-center justify-center bg-gradient-to-b from-transparent to-primary/5 h-[400px]">
+                            <!-- SVG Forest will be injected here -->
                         </div>
-                        <div class="model-label">Large</div>
-                        <div class="model-value" id="count-large">0</div>
+                    </div>
+
+                    <!-- Inference Interface Card -->
+                    <div class="glass-card rounded-xl p-6 space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">terminal</span>
+                                Inference Interface
+                            </h3>
+                        </div>
+                        <form id="inference-form" class="space-y-4">
+                            <textarea id="prompt-input"
+                                class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white placeholder:text-gray-600 focus:ring-1 focus:ring-primary focus:border-primary outline-none min-h-[120px] transition-all"
+                                placeholder="Enter system prompt for Eco-Llama-7B inference..."></textarea>
+
+                            <!-- Response Area -->
+                            <div id="response-text"
+                                class="w-full p-4 rounded-xl bg-white/5 text-sm text-gray-300 min-h-[60px] whitespace-pre-wrap break-words hidden">
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit" id="submit-btn"
+                                    class="bg-primary text-black font-bold px-8 py-3 rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 neon-glow disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <div id="loading" class="spinner size-5 hidden"></div>
+                                    <span class="material-symbols-outlined text-xl" id="btn-icon">play_arrow</span>
+                                    <span id="btn-text">Run Inference</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="pt-6 border-t border-white/5">
+                            <span class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] block mb-4">Last
+                                Run Metrics</span>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <span class="text-[10px] text-gray-500 block">Model</span>
+                                    <span id="resp-model" class="text-sm font-semibold">--</span>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <span class="text-[10px] text-gray-500 block">Tokens</span>
+                                    <span id="resp-tokens" class="text-sm font-semibold">0</span>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <span class="text-[10px] text-gray-500 block">Latency</span>
+                                    <span id="resp-latency" class="text-sm font-semibold">0ms</span>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <span class="text-[10px] text-gray-500 block">Carbon</span>
+                                    <span id="resp-carbon" class="text-sm font-semibold text-primary">0g</span>
+                                </div>
+                            </div>
+                            <div class="hidden">Cache Hit: <span id="resp-cached">No</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (30%) -->
+                <div class="lg:col-span-3 space-y-8">
+                    <!-- Model Distribution Card -->
+                    <div class="glass-card rounded-xl p-6 space-y-6">
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-300">Model Distribution</h3>
+                        <div class="relative flex justify-center py-4">
+                            <!-- Donut Visualization -->
+                            <div
+                                class="size-40 rounded-full border-[16px] border-primary/10 relative flex items-center justify-center">
+                                <!-- Segments -->
+                                <div id="donut-segment-1"
+                                    class="absolute inset-[-16px] rounded-full border-[16px] border-transparent border-t-primary border-r-primary/80 transform rotate-[45deg] transition-all duration-1000">
+                                </div>
+                                <div id="donut-segment-2"
+                                    class="absolute inset-[-16px] rounded-full border-[16px] border-transparent border-b-blue-500/80 transform rotate-[-45deg] transition-all duration-1000">
+                                </div>
+                                <div id="donut-segment-3"
+                                    class="absolute inset-[-16px] rounded-full border-[16px] border-transparent border-l-purple-500/80 transform rotate-[10deg] transition-all duration-1000">
+                                </div>
+
+                                <div class="flex flex-col items-center">
+                                    <span id="total-ops" class="text-2xl font-bold">0</span>
+                                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Total Ops</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 pt-2">
+                            <div class="flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2">
+                                    <div class="size-2 rounded-full bg-primary"></div>
+                                    <span class="text-gray-300">Large (Eco)</span>
+                                </div>
+                                <span id="percent-large" class="font-bold">0%</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2">
+                                    <div class="size-2 rounded-full bg-blue-500"></div>
+                                    <span class="text-gray-300">Medium</span>
+                                </div>
+                                <span id="percent-medium" class="font-bold">0%</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2">
+                                    <div class="size-2 rounded-full bg-purple-500"></div>
+                                    <span class="text-gray-300">Small</span>
+                                </div>
+                                <span id="percent-small" class="font-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Log Card -->
+                    <div class="glass-card rounded-xl flex flex-col h-[500px]">
+                        <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                            <h3 class="text-sm font-bold uppercase tracking-widest text-gray-300">Live Activity</h3>
+                            <div class="size-2 rounded-full bg-primary animate-pulse"></div>
+                        </div>
+                        <div id="live-log-container" class="flex-1 overflow-y-auto p-4 space-y-4 font-mono">
+                            <!-- Logs will be injected here -->
+                            <div class="flex gap-3 text-xs opacity-50">
+                                <span class="text-gray-500">System</span>
+                                <div><span class="text-primary">Log stream initialized...</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </main>
 
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">Cache Stats</span>
-                    <span></span>
-                </div>
-                <div class="card-value green" id="cache-hit-rate">--%</div>
-                <div class="card-subtitle">
-                    Hits: <span id="cache-hits">0</span> |
-                    Misses: <span id="cache-misses">0</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="inference-section">
-            <h2 style="margin-bottom: 16px;">Try CarbonX Inference</h2>
-            <form class="inference-form" id="inference-form">
-                <input type="text" class="inference-input" id="prompt-input" placeholder="Enter your prompt here..."
-                    required>
-                <button type="submit" class="inference-btn" id="submit-btn">
-                    Run Inference
-                </button>
-            </form>
-
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Running carbon-aware inference...</p>
-            </div>
-
-            <div class="response-card" id="response-card">
-                <div class="response-text" id="response-text"></div>
-                <div class="response-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">Model Used</span>
-                        <span class="meta-value" id="resp-model">-</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Tokens</span>
-                        <span class="meta-value" id="resp-tokens">-</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Carbon</span>
-                        <span class="meta-value" id="resp-carbon">-</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Latency</span>
-                        <span class="meta-value" id="resp-latency">-</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Cached</span>
-                        <span class="meta-value" id="resp-cached">-</span>
-                    </div>
+        <footer class="p-8 border-t border-white/5 bg-background-dark/50 mt-12">
+            <div
+                class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-50">
+                <span>Edge Server Locations: London, Singapore, Amsterdam, Tokyo</span>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-primary">Documentation</a>
+                    <a href="#" class="hover:text-primary">API Keys</a>
+                    <a href="#" class="hover:text-primary">v2.4.1-alpha</a>
                 </div>
             </div>
-        </div>
-
-        <footer>
-            <p>CarbonX v0.1.0 | A Carbon-First Framework for Sustainable LLM Inference</p>
         </footer>
     </div>
 
+    <!-- Scripts -->
     <script>
-        const API_BASE = 'http://localhost:8000';
+        const API_URL = 'http://localhost:8000';
+
+        // --- Forest View Class --- //
+        class ForestView {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.svg = null;
+                this.init();
+            }
+
+            init() {
+                this.container.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid slice" id="forest-svg"></svg>`;
+                this.svg = document.getElementById('forest-svg');
+                this.populateForest(10);
+            }
+
+            createTree(x, height, type = 'healthy') {
+                const tree = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const color = type === 'healthy' ? '#2bee6c' : '#f87171';
+                const opacity = 0.6 + Math.random() * 0.4;
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", `M${x} 300 L${x - 15} ${300 - height} L${x + 15} ${300 - height} Z`);
+                path.setAttribute("fill", color);
+                path.setAttribute("opacity", opacity);
+
+                if (type === 'healthy') {
+                    path.setAttribute("filter", "drop-shadow(0 0 5px rgba(43, 238, 108, 0.4))");
+                }
+
+                tree.appendChild(path);
+                return tree;
+            }
+
+            populateForest(count) {
+                if (!this.svg) return;
+                this.svg.innerHTML = '';
+                const ground = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                ground.setAttribute("d", "M0 300 L800 300 L800 280 Q400 260 0 280 Z");
+                ground.setAttribute("fill", "rgba(255,255,255,0.05)");
+                this.svg.appendChild(ground);
+
+                for (let i = 0; i < count; i++) {
+                    const x = (800 / count) * i + (Math.random() * 20 - 10);
+                    const h = 50 + Math.random() * 100;
+                    const tree = this.createTree(x, h);
+                    this.svg.appendChild(tree);
+                }
+            }
+
+            update(budgetRatio) {
+                // budgetRatio: 0 to 1. 0 = full budget, 100 trees. 1 = empty, 5 trees.
+                const density = Math.max(5, Math.floor(60 * (1 - budgetRatio)));
+                this.populateForest(density);
+            }
+        }
+
+        const forest = new ForestView('forest-container');
+
+        // --- Live Log Logic --- //
+        function addLogEntry(message, type = 'info', meta = '') {
+            const container = document.getElementById('live-log-container');
+            const entry = document.createElement('div');
+            entry.className = 'flex gap-3 text-xs animate-pulse';
+
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            let typeColor = 'text-primary';
+            if (type === 'warn') typeColor = 'text-[#fa5538]';
+            if (type === 'system') typeColor = 'text-blue-400';
+
+            entry.innerHTML = `
+                <span class="text-gray-500 font-mono">${time}</span>
+                <div>
+                    <span class="${typeColor} font-bold">${message}</span>
+                    ${meta ? `<p class="text-gray-400 mt-1">${meta}</p>` : ''}
+                </div>
+            `;
+            container.prepend(entry);
+            if (container.children.length > 10) container.lastElementChild.remove();
+        }
+
+        // --- Metrics Update Logic --- //
         async function updateMetrics() {
             try {
-                const metricsRes = await fetch(`${API_BASE}/metrics/json`);
+                // 1. General Metrics
+                const metricsRes = await fetch(`${API_URL}/metrics/json`);
                 if (metricsRes.ok) {
                     const metrics = await metricsRes.json();
-
                     document.getElementById('total-requests').textContent = metrics.total_requests;
-                    document.getElementById('total-carbon').textContent =
-                        metrics.total_carbon_gco2.toFixed(4);
+                    document.getElementById('total-carbon').textContent = metrics.total_carbon_gco2.toFixed(4);
+
+                    // 2. Budget
+                    const budgetRes = await fetch(`${API_URL}/budget/default`);
+                    if (budgetRes.ok) {
+                        const budget = await budgetRes.json();
+                        document.getElementById('budget-remaining').textContent = `${budget.remaining_gco2.toFixed(1)} gCO2 Remaining`;
+                        const percent = Math.max(0, Math.min(100, (budget.remaining_gco2 / budget.limit_gco2) * 100));
+                        document.getElementById('budget-bar').style.width = `${percent}%`;
+                        document.getElementById('consumption-ratio').textContent = `${percent.toFixed(0)}%`;
+                        forest.update(budget.consumption_ratio);
+                    }
+
+                    // 3. Distribution (Donut Chart)
                     const dist = metrics.model_distribution || {};
                     const total = Object.values(dist).reduce((a, b) => a + b, 0) || 1;
+                    document.getElementById('total-ops').textContent = (total > 999) ? (total / 1000).toFixed(1) + 'k' : total;
 
-                    ['small', 'medium', 'large'].forEach(model => {
-                        const count = dist[model] || 0;
-                        const percent = (count / total) * 100;
-                        document.getElementById(`count-${model}`).textContent = count;
-                        document.getElementById(`bar-${model}`).style.height = `${Math.max(10, percent)}%`;
-                    });
-                    const cacheHits = metrics.cache_hits || 0;
-                    const cacheMisses = metrics.cache_misses || 0;
-                    const cacheTotal = cacheHits + cacheMisses;
-                    const hitRate = cacheTotal > 0 ? (cacheHits / cacheTotal * 100).toFixed(1) : 0;
+                    const pLarge = ((dist.large || 0) / total) * 100;
+                    const pMedium = ((dist.medium || 0) / total) * 100;
+                    const pSmall = ((dist.small || 0) / total) * 100;
 
-                    document.getElementById('cache-hits').textContent = cacheHits;
-                    document.getElementById('cache-misses').textContent = cacheMisses;
-                    document.getElementById('cache-hit-rate').textContent = `${hitRate}%`;
-                }
-                const intensityRes = await fetch(`${API_BASE}/carbon-intensity`);
-                if (intensityRes.ok) {
-                    const data = await intensityRes.json();
-                    document.getElementById('carbon-intensity').textContent =
-                        data.intensity_gco2_kwh.toFixed(0);
-                    document.getElementById('region').textContent = data.region;
-                }
-                const budgetRes = await fetch(`${API_BASE}/budget/default`);
-                if (budgetRes.ok) {
-                    const budget = await budgetRes.json();
-                    document.getElementById('budget-remaining').textContent =
-                        budget.remaining_gco2.toFixed(2);
+                    document.getElementById('percent-large').textContent = `${pLarge.toFixed(0)}%`;
+                    document.getElementById('percent-medium').textContent = `${pMedium.toFixed(0)}%`;
+                    document.getElementById('percent-small').textContent = `${pSmall.toFixed(0)}%`;
 
-                    const progress = (1 - budget.consumption_ratio) * 100;
-                    const progressBar = document.getElementById('budget-progress');
-                    progressBar.style.width = `${progress}%`;
-                    progressBar.classList.remove('green', 'yellow', 'red');
-                    if (budget.status === 'ok' || budget.status === 'warning') {
-                        progressBar.classList.add(budget.status === 'ok' ? 'green' : 'yellow');
-                    } else {
-                        progressBar.classList.add('red');
+                    // Rotate donut segments (Simple aesthetic approximation)
+                    // In a real chart.js implementation, we would update data points.
+                    // Here we just rotate the divs to look "active".
+                    const s1 = document.getElementById('donut-segment-1');
+                    const s2 = document.getElementById('donut-segment-2');
+                    const s3 = document.getElementById('donut-segment-3');
+
+                    // Jiggle effect to show activity
+                    if (metrics.total_requests > 0) {
+                        s1.style.transform = `rotate(${45 + Math.random() * 10}deg)`;
+                        s2.style.transform = `rotate(${-45 + Math.random() * 10}deg)`;
+                        s3.style.transform = `rotate(${10 + Math.random() * 10}deg)`;
                     }
                 }
 
-                document.getElementById('connection-status').textContent = 'Connected';
+                // 4. Carbon Intensity
+                const intensityRes = await fetch(`${API_URL}/carbon-intensity`);
+                if (intensityRes.ok) {
+                    const data = await intensityRes.json();
+                    document.getElementById('carbon-intensity').textContent = data.intensity_gco2_kwh.toFixed(0);
+                    document.getElementById('region').textContent = `${data.region} • ${data.is_green ? 'Green' : 'Standard'}`;
+                }
 
+                updateStatus(true);
             } catch (error) {
-                console.error('Failed to fetch metrics:', error);
-                document.getElementById('connection-status').textContent = 'Disconnected';
+                console.error('Metrics failed:', error);
+                updateStatus(false);
             }
         }
+
+        function updateStatus(connected) {
+            const badge = document.getElementById('connection-status');
+            const text = document.getElementById('status-text');
+            if (connected) {
+                text.textContent = 'System Online';
+                text.classList.remove('text-red-500');
+                text.classList.add('text-primary');
+            } else {
+                text.textContent = 'Offline';
+                text.classList.add('text-red-500');
+                text.classList.remove('text-primary');
+            }
+        }
+
+        // --- Inference Handling --- //
         document.getElementById('inference-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const prompt = document.getElementById('prompt-input').value;
-            const submitBtn = document.getElementById('submit-btn');
-            const loading = document.getElementById('loading');
-            const responseCard = document.getElementById('response-card');
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const loader = document.getElementById('loading');
+            const resultArea = document.getElementById('response-text');
 
-            submitBtn.disabled = true;
-            loading.classList.add('active');
-            responseCard.classList.remove('active');
+            if (!prompt.trim()) return;
+
+            // Loading State
+            btn.disabled = true;
+            btnText.textContent = 'Optimizing...';
+            loader.classList.remove('hidden');
+            document.getElementById('btn-icon').classList.add('hidden');
+            resultArea.classList.add('hidden');
+            resultArea.textContent = '';
 
             try {
-                const response = await fetch(`${API_BASE}/inference`, {
+                addLogEntry('Inference requested', 'info', 'Routing to most sustainable node...');
+
+                const response = await fetch(`${API_URL}/inference`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt, max_tokens: 256 })
@@ -599,32 +513,48 @@
 
                 if (response.ok) {
                     const data = await response.json();
+                    resultArea.textContent = data.text;
+                    resultArea.classList.remove('hidden');
 
-                    document.getElementById('response-text').textContent = data.text;
+                    // Update stats
                     document.getElementById('resp-model').textContent = data.model_used;
                     document.getElementById('resp-tokens').textContent = data.tokens_generated;
-                    document.getElementById('resp-carbon').textContent =
-                        `${data.carbon_gco2.toFixed(6)} gCO₂`;
-                    document.getElementById('resp-latency').textContent =
-                        `${data.latency_ms.toFixed(1)} ms`;
-                    document.getElementById('resp-cached').textContent =
-                        data.from_cache ? 'Yes' : 'No';
+                    document.getElementById('resp-latency').textContent = `${data.latency_ms.toFixed(0)}ms`;
+                    document.getElementById('resp-carbon').textContent = `${data.carbon_gco2.toFixed(4)}g`;
+                    document.getElementById('resp-cached').textContent = data.from_cache ? 'Yes' : 'No';
 
-                    responseCard.classList.add('active');
+                    addLogEntry('Inference completed', 'system', `Model: ${data.model_used} | Carbon: ${data.carbon_gco2.toFixed(4)}g`);
                     updateMetrics();
                 } else {
-                    alert('Inference failed. Check console for details.');
+                    addLogEntry('Inference failed', 'warn', 'Backend returned error');
                 }
-            } catch (error) {
-                console.error('Inference error:', error);
-                alert('Failed to connect to CarbonX API');
+            } catch (err) {
+                addLogEntry('Connection Error', 'warn', 'Check backend status');
             } finally {
-                submitBtn.disabled = false;
-                loading.classList.remove('active');
+                btn.disabled = false;
+                btnText.textContent = 'Run Inference';
+                loader.classList.add('hidden');
+                document.getElementById('btn-icon').classList.remove('hidden');
             }
         });
+
+        // Loop
         updateMetrics();
         setInterval(updateMetrics, 5000);
+
+        // Simulating some random logs for effect
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const msgs = [
+                    { m: 'Node 04 in Green Zone', t: 'system', d: 'Intensity dropped to 102g' },
+                    { m: 'Optimization Service', t: 'info', d: 'Route optimized for latency' },
+                    { m: 'Snapshot taken', t: 'system', d: 'Database sync complete' }
+                ];
+                const item = msgs[Math.floor(Math.random() * msgs.length)];
+                addLogEntry(item.m, item.t, item.d);
+            }
+        }, 8000);
+
     </script>
 </body>
 
