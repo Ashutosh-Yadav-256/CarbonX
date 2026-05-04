@@ -184,18 +184,6 @@ carbonx/
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## Citation
-
-If you use CarbonX in your research, please cite:
-
-```bibtex
-@article{yadav2026carbonx,
-  title={CarbonX: A Carbon-First, Open-Source Framework for Sustainable LLM Inference},
-  author={Yadav, Ashutosh},
-  journal={IEEE Conference},
-  year={2026}
-}
-```
 
 ## Acknowledgments
 
